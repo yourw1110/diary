@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monochrome Diary</title>
+    <link rel="stylesheet" href="style.css?v=1.5">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="manifest" href="manifest.json?v=2">
+    <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Diary Black">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+
+<body>
+    <div class="container main-content">
+        <header>
+            <div class="header-top">
+                <h1>Diary</h1>
+            </div>
+            <p id="current-date"></p>
+        </header>
+
+        <main>
+            <form class="entry-form" id="entry-form">
+                <textarea id="entry-input" placeholder="What's on your mind today?"></textarea>
+                <div id="image-preview-container" class="hidden">
+                    <img id="image-preview" src="" alt="Preview">
+                    <button type="button" id="remove-image-btn">×</button>
+                </div>
+                <div class="form-footer">
+                    <input type="file" id="image-input" accept="image/*" class="hidden">
+                    <button type="button" id="attach-btn" class="secondary-btn">Add Image</button>
+                    <button type="submit" id="save-btn">Save Entry</button>
+                </div>
+            </form>
+
+            <section class="entries-list" id="entries-list">
+                <!-- Entries will be injected here -->
+            </section>
+        </main>
+    </div>
+    <script type="module" src="app.js?v=4.0"></script>
+</body>
+
+</html>
