@@ -6,7 +6,7 @@ def deploy():
     try:
         # Command to deploy via Wrangler CLI using npx
         # --project-name defines the project in Cloudflare
-        command = ["npx", "wrangler", "pages", "deploy", ".", "--project-name", "monochrome-diary"]
+        command = ["npx", "wrangler", "pages", "deploy", ".", "--project-name", "diary"]
         
         # Using shell=True for Windows environment
         # The first run will likely prompt for authentication and project creation
