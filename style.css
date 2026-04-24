@@ -23,7 +23,7 @@
 body {
     background-color: var(--bg-color);
     color: var(--text-primary);
-    font-family: 'Noto Serif JP', serif;
+    font-family: 'Noto Sans JP', sans-serif;
     line-height: 1.6;
     min-height: 100vh;
     display: flex;
