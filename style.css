@@ -304,6 +304,20 @@ button:active {
     border: 1px solid var(--border);
 }
 
+/* Thumbnail styling */
+.entry-image.thumbnail {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.entry-image.thumbnail:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
 .entry-actions {
     display: flex;
     gap: 0.5rem;
@@ -311,7 +325,8 @@ button:active {
 
 .edit-btn,
 .delete-btn,
-.comment-btn {
+.comment-btn,
+.delete-image-btn {
     background: transparent;
     color: var(--text-secondary);
     font-size: 0.7rem;
@@ -322,11 +337,13 @@ button:active {
 
 .diary-entry:hover .delete-btn,
 .diary-entry:hover .edit-btn,
-.diary-entry:hover .comment-btn {
+.diary-entry:hover .comment-btn,
+.diary-entry:hover .delete-image-btn {
     opacity: 1;
 }
 
-.delete-btn:hover {
+.delete-btn:hover,
+.delete-image-btn:hover {
     color: #ff4444;
     box-shadow: none;
     transform: none;
@@ -336,6 +353,60 @@ button:active {
     color: var(--accent);
     box-shadow: none;
     transform: none;
+}
+
+/* Modal styling */
+.image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-modal.hidden {
+    display: none !important;
+}
+
+.image-modal img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 2001;
+}
+
+.close-modal:hover {
+    color: #ff4444;
 }
 
 /* Comments Styling */

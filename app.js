@@ -62,6 +62,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewContainer = document.getElementById('image-preview-container');
     const previewImg = document.getElementById('image-preview');
     const removeImageBtn = document.getElementById('remove-image-btn');
+    const imageModal = document.getElementById('image-modal');
+    const modalImage = document.getElementById('modal-image');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+
+    if (closeModalBtn && imageModal) {
+        closeModalBtn.addEventListener('click', () => {
+            imageModal.classList.add('hidden');
+        });
+        imageModal.addEventListener('click', (e) => {
+            if (e.target === imageModal) {
+                imageModal.classList.add('hidden');
+            }
+        });
+    }
 
     let currentImageData = null;
     let editingId = null;
@@ -97,8 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     reader.readAsDataURL(file);
                 });
 
-                // Resize immediately to keep memory usage low and prevent hangs
-                currentImageData = await resizeImage(imageData, 800, 800);
+                // Resize to an appropriate size if too large or heavy
+                const MAX_FILE_SIZE = 1.5 * 1024 * 1024; // 1.5MB
+                if (file.size > MAX_FILE_SIZE) {
+                    currentImageData = await resizeImage(imageData, 800, 800, 0.6);
+                } else {
+                    currentImageData = await resizeImage(imageData, 1200, 1200, 0.8);
+                }
+                
                 previewImg.src = currentImageData;
                 previewContainer.classList.remove('hidden');
             } catch (error) {
@@ -202,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    async function resizeImage(base64Str, maxWidth, maxHeight) {
+    async function resizeImage(base64Str, maxWidth, maxHeight, quality = 0.7) {
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.src = base64Str;
@@ -228,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.7)); // Moderate compression
+                    resolve(canvas.toDataURL('image/jpeg', quality));
                 } catch (e) {
                     reject(e);
                 }
@@ -261,10 +281,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button class="comment-btn" data-id="${entry.id}">Comment</button>
                         <button class="edit-btn" data-id="${entry.id}">Edit</button>
                         <button class="delete-btn" data-id="${entry.id}">Delete</button>
+                        ${entry.image ? `<button class="delete-image-btn" data-id="${entry.id}">Delete Image</button>` : ''}
                     </div>
                 </div>
                 <div class="entry-content">${escapeHTML(entry.content)}</div>
-                ${entry.image ? `<img src="${entry.image}" class="entry-image" alt="Attached image">` : ''}
+                ${entry.image ? `<img src="${entry.image}" class="entry-image thumbnail" data-full-src="${entry.image}" alt="Attached image">` : ''}
                 
                 <div class="comments-section" id="comments-${entry.id}">
                     ${(entry.comments || []).map((comment, index) => {
@@ -302,6 +323,33 @@ document.addEventListener('DOMContentLoaded', () => {
             entriesList.appendChild(entryEl);
 
             // Add button listeners
+            const deleteImageBtn = entryEl.querySelector('.delete-image-btn');
+            if (deleteImageBtn) {
+                deleteImageBtn.addEventListener('click', async () => {
+                    if (!checkKey()) return;
+                    if (window.confirm('Delete this image?')) {
+                        try {
+                            await updateDoc(doc(db, "entries", entry.id), { image: null });
+                        } catch (error) {
+                            console.error("Error deleting image:", error);
+                            alert("Failed to delete image.");
+                        }
+                    }
+                });
+            }
+
+            const thumbnailImg = entryEl.querySelector('.entry-image.thumbnail');
+            if (thumbnailImg) {
+                thumbnailImg.addEventListener('click', () => {
+                    const imageModal = document.getElementById('image-modal');
+                    const modalImage = document.getElementById('modal-image');
+                    if (imageModal && modalImage) {
+                        modalImage.src = thumbnailImg.dataset.fullSrc;
+                        imageModal.classList.remove('hidden');
+                    }
+                });
+            }
+
             entryEl.querySelector('.delete-btn').addEventListener('click', async () => {
                 if (!checkKey()) return;
                 if (window.confirm('Delete this entry?')) {
