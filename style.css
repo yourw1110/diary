@@ -23,7 +23,7 @@
 body {
     background-color: var(--bg-color);
     color: var(--text-primary);
-    font-family: 'Inter', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'M PLUS 1p', -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.6;
     min-height: 100vh;
     display: flex;
